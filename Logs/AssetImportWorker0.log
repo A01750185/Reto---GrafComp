@@ -208,3 +208,4 @@ Received Import Request.
 Start importing Assets/Calle/RetoGC_room_38_124.jpeg using Guid(9d7f8edea2c90d744a72af6e212de281) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '86162635eced941310d5bb6e9fcf4303') in 0.036253 seconds 
   Import took 0.043291 seconds .
 
+AssetImportWorkerClient::OnTransportError - code=2 error=End of file
