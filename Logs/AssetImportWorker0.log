@@ -144,3 +144,4 @@ Received Import Request.
 Start importing Assets/Python/ModeloTrafico.py using Guid(946132e4682b4454190aad842febcbad) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '4bc74af9e35477a512c9f3bf465e9e0a') in 0.016793 seconds 
   Import took 0.019094 seconds .
 
+AssetImportWorkerClient::OnTransportError - code=2 error=End of file
