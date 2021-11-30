@@ -2,9 +2,9 @@ from flask import Flask, render_template, request, jsonify
 import json, logging, os, atexit
 from ModeloTrafico import TraficModel
 
-ancho =10
-alto = 10
-N = 2
+ancho =40
+alto = 40
+N = 4
 app = Flask(__name__, static_url_path='')
 model = TraficModel(N,ancho,alto)
 def positionsToJSON(ps):

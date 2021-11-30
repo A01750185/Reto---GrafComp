@@ -2,9 +2,9 @@
 """
 Equipo: 
 Liam Garay Monroy A01750632
-Jorge Chávez Badillo A01749448
+Jorge Chávez Badillo A01749448
 Amy Murakami Tsutsumi A01750185
-Ariadna Jocelyn Guzmán Jiménez A01749373
+Ariadna Jocelyn Guzmán Jiménez A01749373
 """
 
 from mesa import Agent, Model, model
@@ -18,10 +18,12 @@ class CarAgent(Agent):
     def __init__(self, unique_id, model):
         super().__init__(unique_id, model)
         random.seed()
-        self.direccion = 0 # Frente 0, Derecha 1, Izquierda 2, Atras 3
-        self.sentido = 0 # Derecha 0, Izquierda 1, Arriba 2, Abajo 3
+        self.direccion = -1 # Frente 0, Derecha 1, Izquierda 2, Atras 3
+        self.sentido = -1 # Derecha 0, Izquierda 1, Arriba 2, Abajo 3
         # El sentido toma en consideracion que las columnas crecen a la derecha y los renglones
         # crecen hacia arriba
+        self.ancho = 0
+        self.posicionInicial = ()
 
     def isFreeMyDirection(self, listFreeSpaces, list_possible_steps):
         """Función que se encarga de buscar si existen espacios libres"""
@@ -76,20 +78,52 @@ class CarAgent(Agent):
         else:
             print("Error en self.sentido")
             return False, (-1,-1)
-    def preguntaSemaforo(self, ancho, semaforos):
-        if((self.pos[0] >=1 and self.pos[0] < (ancho//2-1)) and self.pos[1] == (ancho//2-1)):
+    
+    def preguntaSemaforo(self, semaforos):
+        '''
+        Número Semáforo     Posición Lista Semáforos    Coordenadas    
+        Semáforo 1          0                           (3, 3)
+        Semáforo 2          1                           (6, 3)
+        Semáforo 3          2                           (3, 6)
+        Semáforo 4          3                           (6, 6)                   
+        '''
+        # Horizontal 
+        # Semaforo 1
+        if((self.pos[0] >= 1 and self.pos[0] < (self.ancho//2+1)) and self.pos[1] == (self.ancho//2-1)):
                 if(semaforos[1].estado == "g" or semaforos[1].estado == "y"):
                     self.move()
-        elif((self.pos[0] >=(ancho//2+1) and self.pos[0] <= (ancho//-1)) and self.pos[1] == (ancho//2)):
+        # Semaforo 3
+        if((self.pos[0] <= (self.ancho - 2) and self.pos[0] >= (self.ancho//2 - 1)) and self.pos[1] == (self.ancho//2)):
                 if(semaforos[2].estado == "g" or semaforos[2].estado == "y"):
                     self.move()
-        elif((self.pos[1] >= (ancho//2+1)  or self.pos[1] <= (ancho//-1)) and self.pos[0] == (ancho//2-1)):
+
+        #Vertical 
+        # Semaforo 2
+        if(self.pos[0] == self.ancho//2 and (self.pos[1] >= 1 and self.pos[1] <= self.ancho//2)):
+                if(semaforos[3].estado == "g" or semaforos[3].estado == "y"):
+                    self.move()
+        # Semaforo 0
+        if(self.pos[0] == self.ancho//2 - 1 and (self.pos[1] >= self.ancho//2 - 1 and self.pos[1] <= self.ancho - 2)):
                 if(semaforos[0].estado == "g" or semaforos[0].estado == "y"):
                     self.move()
-            
-                
 
-
+    def revisaUbicacion(self, x, y, ancho):
+        self.posicionInicial = (x, y)
+        # Calle Horizontal de ida desde cuadrante inferior izquierdo, Fijo el eje y
+        if((self.posicionInicial[0] >= 1 and self.posicionInicial[0] <= (ancho//2) - 2) and (self.posicionInicial[1] == ancho//2 - 1)): 
+            return (0, 0)
+        # Calle Horizontal de vuelta desde cuadrante superior derecho, Fijo el eje y
+        if((self.posicionInicial[0] >= (ancho//2) + 1 and self.posicionInicial[0] <= (ancho - 2)) and (self.posicionInicial[1] == ancho//2)): 
+            return (0, 1)
+        # Calle Vertical de ida desde cuadrante inferior derecho, Fijo el eje x
+        if((self.posicionInicial[0] == ancho//2) and (self.posicionInicial[1] >= 1 and self.posicionInicial[1] <= ancho -2)): 
+            return (0, 2)
+        # Calle Vertical de vuelta desde cuadrante superior izquierdo, Fijo el eje x
+        if((self.posicionInicial[0] == ancho//2 - 1) and (self.posicionInicial[1] >= ancho//2 - 2 and self.posicionInicial[1] <= ancho -2)): 
+            return (0, 3)
+        else:
+            return (-100, -100)
+    
     def move(self):
         possible_steps = self.model.grid.get_neighborhood(
             self.pos,
@@ -113,36 +147,54 @@ class CarAgent(Agent):
             print(f"No se puede mover en sentido {self.sentido}, ubicación ocupada.")
             nuevoSentido = random.randint(0, 3)
             while (nuevoSentido == self.sentido):
-                #nuevoSentido = random.randint(0, 3)
-                self.sentido = 1
+                nuevoSentido = random.randint(0, 3)
+            #self.sentido = nuevoSentido
+            #self.sentido = 1
             print(f"Cambiando sentido a {self.sentido}\n")
     
     def step(self):
         """ En cada paso moverse aleatoriamente """
         # self.direccion = random.randint(0, 3)
-        self.direccion = 0
+        #self.direccion = 0
+        # Horizontal 
+        # Semáforo 1 
+        if((self.pos[0] >= self.ancho//2+1) and (self.pos[1] == self.ancho//2-1)):
+           self.move()
+        # Semáforo 3
+        if((self.pos[0] <= self.ancho//2 - 2) and (self.pos[1] == self.ancho//2)):
+            self.move()
+
+        # Vertical 
+        # Semáforo 2
+        if((self.pos[0] == self.ancho//2) and (self.pos[1] >= self.ancho//2 + 1)):
+            self.move()
+        # Semáforo 0
+        if((self.pos[0] == self.ancho//2 - 1) and (self.pos[1] <= self.ancho//2 - 2)):
+            self.move()
         print(f"Agente: {self.unique_id} movimiento {self.direccion}")
+        #self.move()
 
 class Semaforo(Agent):
     """Modelo para los semáforos"""
     def __init__(self,unique_id,model):
         super().__init__(unique_id,model)
-        self.estado=["g","y","r"]
-    
-    def getEstado(self, index):
-        return self.estado[index]
+        self.estados=["g", "y", "r"]
+        self.estado = ""
+
+    def getEstado(self):
+        return self.estado
     
     def step(self):
         pass
 
     def cambioVerde(self):
-        self.estado = "g"
+        self.estado = self.estados[0]
 
     def cambioAmarillo(self):
-        self.estado = "y"
+        self.estado = self.estados[1]
 
     def cambioRojo(self):
-        self.estado = "r"
+        self.estado = self.estados[2]
     
 
 class ObstacleAgent(Agent):
@@ -156,8 +208,7 @@ class ObstacleAgent(Agent):
 
 class TraficModel(Model):
     """Modelo para los automóviles"""
-    def __init__(self, N,ancho,alto):
-        self.ancho = ancho
+    def __init__(self, N, ancho, alto):
         self.num_agents = N
         self.grid = SingleGrid(ancho, alto, False) # NO Es Toroidal
         self.schedule = RandomActivation(self)
@@ -165,6 +216,7 @@ class TraficModel(Model):
         self.start = timer()
         self.agentesSemaforos = []
         self.carros = []
+        self.ancho = ancho
 
         # Crear obstaculos en los limites del grid
         numObs = (ancho * 2) + (alto * 2 - 4)
@@ -218,7 +270,7 @@ class TraficModel(Model):
         # Crear los obstáculos 
         #for i in range(numObs):
         print("----------------ListaPosLimite----------------------")
-        print(len(listaPosLimite))
+        print("Número de obstáculos:", len(listaPosLimite))
         for i in range(len(listaPosLimite)):
             a = ObstacleAgent(i, self)
             self.schedule.add(a)
@@ -227,7 +279,7 @@ class TraficModel(Model):
 
         # Crear los semáforos 
         print("----------------Semáforos----------------------")
-        print(len(semaforos))
+        print("Número de semáforos:", len(semaforos))
         for i in range(len(semaforos)):
             s = Semaforo(i + 2000, self) # La numeracion de los semáforos empieza en el 2000
             self.agentesSemaforos.append(s)
@@ -235,42 +287,67 @@ class TraficModel(Model):
             self.grid.place_agent(s, semaforos[i])
             print(semaforos[i])
 
+        # Inicializar los semáforos en rojo y verde 
+        self.agentesSemaforos[0].cambioVerde() 
+        self.agentesSemaforos[3].cambioVerde()
+
+        self.agentesSemaforos[2].cambioRojo()
+        self.agentesSemaforos[1].cambioRojo() 
+
         # Create car agents
+        print("----------------Automóviles----------------------")
+        print("Número de automóviles:", self.num_agents)
+        posicionesCarros = [(20, 1), (19, 38), (1, 19), (38, 20)]
+        posicionesCarros10 = [(1, 4), (8, 5), (5, 1), (4, 8)]
         for i in range(self.num_agents):
-            a = CarAgent(i + 1000, self) # La numeracion de los agentes empieza en el 1000
-            self.schedule.add(a)
+            a = CarAgent(i + 10000, self) # La numeracion de los agentes empieza en el 1000
             self.carros.append(a)
+            self.schedule.add(a)
             # Add the agent to a random empty grid cell
             x = self.random.randrange(self.grid.width)
             y = self.random.randrange(self.grid.height)
             while (not self.grid.is_cell_empty((x, y))):
                 x = self.random.randrange(self.grid.width)
                 y = self.random.randrange(self.grid.height)
-            self.grid.place_agent(a, (x, y))
 
-            #Semaforos iniciales
-            self.agentesSemaforos[0].cambioVerde() 
-            self.agentesSemaforos[3].cambioVerde()
+            # Horizontal 
+            #x1, y1 = 1, 4 # Ida 
+            #x1, y1 = 8, 5 # Regreso
 
-            self.agentesSemaforos[2].cambioRojo()
-            self.agentesSemaforos[1].cambioRojo()
+            # Vertical 
+            #x1, y1 = 5, 1 # Ida 
+            #x1, y1 = 4, 8 # Regreso
+
+            #x1, y1 = 10, 1 20 20 
+            #x1, y1 = 15, 1
+
+            #x1, y1 = 20, 1
+            x1, y1 = posicionesCarros[i][0], posicionesCarros[i][1] 
+            self.grid.place_agent(a, (x1, y1)) # Ida
+            
+            # Revisar en que coordenada aparecen los agentes para asignar dirección y sentido
+            direccion, sentido = a.revisaUbicacion(x1, y1, ancho)[0], a.revisaUbicacion(x1, y1, ancho)[1]
+            a.direccion, a.sentido = direccion, sentido
+            a.ancho = ancho
+            print(a.direccion, a.sentido)
 
     def step(self):
         """Advance the model by one step."""
         self.schedule.step()
+
         ps = []
         for carro in self.carros:
-            carro.preguntaSemaforo(self.ancho,self.agentesSemaforos)
+            carro.preguntaSemaforo(self.agentesSemaforos)
             xy = carro.pos
             p = [xy[0], xy[1], 0]  #XZY
             ps.append(p)
             print(carro.pos)
+
         end = timer()
         elapsed = (int)(end - self.start)
         print("Elapsed: ", elapsed)
 
         if(len(str(elapsed)) == 1):
-            #if(elapsed%10 == 0):
             if(str(elapsed)[-1] == "7"):
                 self.agentesSemaforos[0].cambioAmarillo() 
                 self.agentesSemaforos[3].cambioAmarillo()
@@ -279,7 +356,6 @@ class TraficModel(Model):
             selectSemaforo = int(selectSemaforo)
             if(selectSemaforo%2 == 0):
                 if(str(elapsed)[-1] == "0"):
-            #if(elapsed%10 == 0):
                     self.agentesSemaforos[0].cambioVerde() 
                     self.agentesSemaforos[3].cambioVerde()
 
@@ -291,7 +367,6 @@ class TraficModel(Model):
         
             else:
                 if(str(elapsed)[-1] == "0"):
-            #if(elapsed%10 == 0):
                     self.agentesSemaforos[2].cambioVerde() 
                     self.agentesSemaforos[1].cambioVerde()
 
@@ -302,3 +377,22 @@ class TraficModel(Model):
                     self.agentesSemaforos[1].cambioAmarillo()
         return ps
         
+        '''if(elapsed%10 == 0): 
+            self.agentesSemaforos[0].cambioVerde() 
+            self.agentesSemaforos[3].cambioVerde()
+
+            self.agentesSemaforos[2].cambioRojo()
+            self.agentesSemaforos[1].cambioRojo()'''
+        
+        '''if(str(elapsed)[-1] == "3" and self.agentesSemaforos[0].getEstado() == "g" and self.agentesSemaforos[3].getEstado() == "g"):
+            print("Cambio a Amarillo")
+            self.agentesSemaforos[0].cambioAmarillo() 
+            self.agentesSemaforos[3].cambioAmarillo()
+        if(str(elapsed)[-1] == "5" and self.agentesSemaforos[0].getEstado() == "y" and self.agentesSemaforos[3].getEstado() == "y"):
+            print("Cambio a Rojo")
+            self.agentesSemaforos[0].cambioRojo() 
+            self.agentesSemaforos[3].cambioRojo()
+        if(str(elapsed)[-1] == "9" and self.agentesSemaforos[0].getEstado() == "r" and self.agentesSemaforos[3].getEstado() == "r"):
+            print("Cambio a Verde")
+            self.agentesSemaforos[0].cambioVerde() 
+            self.agentesSemaforos[3].cambioVerde()'''
