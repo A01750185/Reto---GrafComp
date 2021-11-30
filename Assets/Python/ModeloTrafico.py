@@ -246,7 +246,7 @@ class TraficModel(Model):
             while (not self.grid.is_cell_empty((x, y))):
                 x = self.random.randrange(self.grid.width)
                 y = self.random.randrange(self.grid.height)
-            self.grid.place_agent(a, (1, 4))
+            self.grid.place_agent(a, (x, y))
 
             #Semaforos iniciales
             self.agentesSemaforos[0].cambioVerde() 
@@ -258,12 +258,13 @@ class TraficModel(Model):
     def step(self):
         """Advance the model by one step."""
         self.schedule.step()
+        ps = []
         for carro in self.carros:
             carro.preguntaSemaforo(self.ancho,self.agentesSemaforos)
-            ps = []
             xy = carro.pos
             p = [xy[0], xy[1], 0]  #XZY
             ps.append(p)
+            print(carro.pos)
         end = timer()
         elapsed = (int)(end - self.start)
         print("Elapsed: ", elapsed)

@@ -23,7 +23,7 @@ public class WebClient : MonoBehaviour
     {
         WWWForm form = new WWWForm();
         form.AddField("bundle", "the data");
-        string url = "http://192.168.39.163:8585/multiagentes";
+        string url = "http://localhost:8585/multiagentes";
         //using (UnityWebRequest www = UnityWebRequest.Post(url, form))
         using (UnityWebRequest www = UnityWebRequest.Get(url))
         {
@@ -49,7 +49,9 @@ public class WebClient : MonoBehaviour
                 txt = txt.TrimStart('"', '{', 'd', 'a', 't', 'a', ':', '[');
                 txt = "{\"" + txt;
                 txt = txt.TrimEnd(']', '}');
-                //txt = txt + '}';
+
+                //Comentar la línea 54 si es solo un agente
+                txt = txt + '}';
                 string[] strs = txt.Split(new string[] { "}, {" }, StringSplitOptions.None);
                 Debug.Log("strs.Length:" + strs.Length);
                 for (int i = 0; i < strs.Length; i++)

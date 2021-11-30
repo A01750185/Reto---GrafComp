@@ -4,7 +4,7 @@ from ModeloTrafico import TraficModel
 
 ancho =10
 alto = 10
-N = 1
+N = 2
 app = Flask(__name__, static_url_path='')
 model = TraficModel(N,ancho,alto)
 def positionsToJSON(ps):
@@ -34,4 +34,4 @@ def multiagentes():
     return respuesta
 
 if __name__ == '__main__':
-    app.run(host='192.168.39.163', port=port, debug=True)
+    app.run(host='0.0.0.0', port=port, debug=True)
