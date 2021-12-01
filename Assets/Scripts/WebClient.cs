@@ -51,7 +51,11 @@ public class WebClient : MonoBehaviour
                 txt = txt.TrimEnd(']', '}');
 
                 //Comentar la línea 54 si es solo un agente
-                txt = txt + '}';
+                //txt = txt + '}';
+                if(spheres.Length != 1){
+                    txt = txt + '}';
+                }
+
                 string[] strs = txt.Split(new string[] { "}, {" }, StringSplitOptions.None);
                 Debug.Log("strs.Length:" + strs.Length);
                 for (int i = 0; i < strs.Length; i++)

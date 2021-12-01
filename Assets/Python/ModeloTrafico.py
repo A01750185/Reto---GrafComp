@@ -376,23 +376,3 @@ class TraficModel(Model):
                     self.agentesSemaforos[2].cambioAmarillo() 
                     self.agentesSemaforos[1].cambioAmarillo()
         return ps
-        
-        '''if(elapsed%10 == 0): 
-            self.agentesSemaforos[0].cambioVerde() 
-            self.agentesSemaforos[3].cambioVerde()
-
-            self.agentesSemaforos[2].cambioRojo()
-            self.agentesSemaforos[1].cambioRojo()'''
-        
-        '''if(str(elapsed)[-1] == "3" and self.agentesSemaforos[0].getEstado() == "g" and self.agentesSemaforos[3].getEstado() == "g"):
-            print("Cambio a Amarillo")
-            self.agentesSemaforos[0].cambioAmarillo() 
-            self.agentesSemaforos[3].cambioAmarillo()
-        if(str(elapsed)[-1] == "5" and self.agentesSemaforos[0].getEstado() == "y" and self.agentesSemaforos[3].getEstado() == "y"):
-            print("Cambio a Rojo")
-            self.agentesSemaforos[0].cambioRojo() 
-            self.agentesSemaforos[3].cambioRojo()
-        if(str(elapsed)[-1] == "9" and self.agentesSemaforos[0].getEstado() == "r" and self.agentesSemaforos[3].getEstado() == "r"):
-            print("Cambio a Verde")
-            self.agentesSemaforos[0].cambioVerde() 
-            self.agentesSemaforos[3].cambioVerde()'''
