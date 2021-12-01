@@ -29,21 +29,11 @@ def root():
     
 @app.route('/multiagentes')
 def multiagentes():
-    """if  model.schedule.steps > 10:
-        model1 = TraficModel(N,ancho,alto)
-        if model1.schedule.steps > 10:
-            model1 = TraficModel(N,ancho,alto)
-        positions = model1.step()
-        print(model.schedule.steps)
-        respuesta = "{\"data\":" + positionsToJSON(positions) + "}"
-        #return positionsToJSON(positions)
-        return respuesta"""
-    if(model.schedule.steps > 10):
-        model.__init__(N,ancho,alto)
+    '''if(model.schedule.steps > 10):
+        model.__init__(N, ancho, alto)'''
     positions = model.step()
     print(model.schedule.steps)
     respuesta = "{\"data\":" + positionsToJSON(positions) + "}"
-    #return positionsToJSON(positions)
     return respuesta
 
 if __name__ == '__main__':

@@ -129,6 +129,12 @@ public class WebClient : MonoBehaviour
                 spheres[s].transform.localPosition = interpolated - new Vector3(0.0f,0.0f,0.0f);
 
                 Vector3 dir = last[s] - prevLast[s];
+                Vector3 vacio = new Vector3(0, 0, 0); 
+
+                /*if(dir == vacio){
+                    spheres[s].active = false;
+                }*/ 
+
                 spheres[s].transform.rotation = Quaternion.LookRotation(dir);
             }
         }
