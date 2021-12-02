@@ -30,9 +30,9 @@ public class WebClient : MonoBehaviour
     {
         WWWForm form = new WWWForm();
         form.AddField("bundle", "the data");
-        string url = "http://localhost:8585/multiagentes";
-        //using (UnityWebRequest www = UnityWebRequest.Post(url, form))
-        using (UnityWebRequest www = UnityWebRequest.Get(url))
+        string url = "https://movilidadurbanae3.us-south.cf.appdomain.cloud/multiagentes";
+        using (UnityWebRequest www = UnityWebRequest.Post(url, form))
+        //using (UnityWebRequest www = UnityWebRequest.Get(url))
         {
             byte[] bodyRaw = System.Text.Encoding.UTF8.GetBytes(data);
             www.uploadHandler = (UploadHandler)new UploadHandlerRaw(bodyRaw);
@@ -95,9 +95,9 @@ public class WebClient : MonoBehaviour
     {
         WWWForm form = new WWWForm();
         form.AddField("bundle", "the data");
-        string url = "http://localhost:8585/semaforos";
-        //using (UnityWebRequest www = UnityWebRequest.Post(url, form))
-        using (UnityWebRequest www = UnityWebRequest.Get(url))
+        string url = "https://movilidadurbanae3.us-south.cf.appdomain.cloud/semaforos";
+        using (UnityWebRequest www = UnityWebRequest.Post(url, form))
+        //
         {
             byte[] bodyRaw = System.Text.Encoding.UTF8.GetBytes(data);
             www.uploadHandler = (UploadHandler) new UploadHandlerRaw(bodyRaw);
@@ -300,9 +300,9 @@ public class WebClient : MonoBehaviour
         Debug.Log("Entró a resetModel"); 
         WWWForm form = new WWWForm();
         form.AddField("bundle", "the data");
-        string url = "http://localhost:8585/resetModel";
-        //using (UnityWebRequest www = UnityWebRequest.Post(url, form))
-        using (UnityWebRequest www = UnityWebRequest.Get(url))
+        string url = "https://movilidadurbanae3.us-south.cf.appdomain.cloud/resetModel";
+        using (UnityWebRequest www = UnityWebRequest.Post(url, form))
+        //
         {
             byte[] bodyRaw = System.Text.Encoding.UTF8.GetBytes(data);
             www.uploadHandler = (UploadHandler)new UploadHandlerRaw(bodyRaw);

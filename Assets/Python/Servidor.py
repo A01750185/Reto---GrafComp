@@ -40,7 +40,7 @@ port = int(os.getenv('PORT', 8585))
 def root():
     return jsonify([{"message":"Hello World from IBM Cloud!"}])
     
-@app.route('/multiagentes')
+@app.route('/multiagentes',methods=['GET','POST'])
 def multiagentes():
     if(model.schedule.steps > 110):
         model.__init__(N, ancho, alto)
@@ -49,7 +49,7 @@ def multiagentes():
     respuesta = "{\"data\":" + positionsToJSON(positions[0]) + "}"
     return respuesta
 
-@app.route('/semaforos')
+@app.route('/semaforos',methods=['GET','POST'])
 def semaforos():
     '''if(model.schedule.steps > 10):
         model._init_(N, ancho, alto)'''
@@ -58,7 +58,7 @@ def semaforos():
     respuesta = "{\"dataSem\":" + estadoToJSON(estados[1]) + "}"
     return respuesta
 
-@app.route('/resetModel')
+@app.route('/resetModel',methods=['GET','POST'])
 def resetModel():
     print("Entro a reset------------------------")
     model.schedule.steps = 0
