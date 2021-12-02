@@ -17,8 +17,16 @@ public class WebClient : MonoBehaviour
     public float timeToUpdate = 5.0f;
     private float timer;
     public float dt;
+    private int estadoRepeticion = 0; 
 
     // IEnumerator - yield return
+
+    void ActivateObjects(GameObject[] spheres){
+         for(int s = 0; s < spheres.Length; s++){
+             spheres[s].transform.parent.gameObject.SetActive(true);
+             spheres[s].SetActive(true);
+         }
+    }
     IEnumerator SendData(string data)
     {
         WWWForm form = new WWWForm();
@@ -80,7 +88,7 @@ public class WebClient : MonoBehaviour
 
     }
 
-    void ResetModel(string data)
+    IEnumerator ResetModel(string data)
     {
         Debug.Log("Entró a resetModel"); 
         WWWForm form = new WWWForm();
@@ -95,12 +103,11 @@ public class WebClient : MonoBehaviour
             //www.SetRequestHeader("Content-Type", "text/html");
             www.SetRequestHeader("Content-Type", "application/json");
 
-            //yield return www.SendWebRequest();          // Talk to Python
+            yield return www.SendWebRequest();          // Talk to Python
             if (www.isNetworkError || www.isHttpError){
                 Debug.Log(www.error);
             } 
         }
-        //StopCoroutine("ResetModel"); 
     }
 
     // Start is called before the first frame update
@@ -121,6 +128,9 @@ public class WebClient : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        /*if(estadoRepeticion == 1){
+            ActivateObjects(spheres); 
+        }*/
         /*
          *    5 -------- 100
          *    timer ----  ?
@@ -162,7 +172,7 @@ public class WebClient : MonoBehaviour
             }
         }
         //bool state = false; 
-        int desactivados = 0; 
+        /*int desactivados = 0; 
         for(int s = 0; s < spheres.Length; s++){
             if(spheres[s].active == false){
                 //state = true; 
@@ -177,11 +187,16 @@ public class WebClient : MonoBehaviour
 
         if(spheres.Length == desactivados){
             desactivados = 0; 
+            estadoRepeticion = 1; 
             Debug.Log("Todos los objetos están desactivados"); 
             Vector3 fakePos = new Vector3(3.44f, 0, -15.707f);
             string json = EditorJsonUtility.ToJson(fakePos);
-            //StartCoroutine(ResetModel(json));
-            ResetModel(json); 
+            StartCoroutine(ResetModel(json));
+            StopCoroutine("ResetModel"); 
+            //ResetModel(json);
         }
+        else{
+            estadoRepeticion = 0; 
+        }*/
     }
 }

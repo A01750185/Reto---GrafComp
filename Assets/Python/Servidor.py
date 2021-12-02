@@ -43,8 +43,8 @@ def root():
     
 @app.route('/multiagentes')
 def multiagentes():
-    '''if(model.schedule.steps > 10):
-        model.__init__(N, ancho, alto)'''
+    if(model.schedule.steps > 110):
+        model.__init__(N, ancho, alto)
     positions = model.step()
     print(model.schedule.steps)
     respuesta = "{\"data\":" + positionsToJSON(positions[0]) + "}"
@@ -64,11 +64,12 @@ def resetModel():
     print("Entro a reset------------------------")
     model.schedule.steps = 0
     model.__init__(N, ancho, alto)
-    '''positions = model.step()
+    '''model.schedule.steps = 0
+    positions = model.step()
     print(model.schedule.steps)
     respuesta = "{\"data\":" + positionsToJSON(positions) + "}"
-    return respuesta '''
+    return respuesta'''
     return jsonify([{"message":"Modelo Reiniciado"}])
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=port, debug=True)  
+    app.run(host='0.0.0.0', port=port, debug=True) 
