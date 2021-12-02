@@ -378,13 +378,22 @@ class TraficModel(Model):
         self.schedule.step()
 
         ps = []
+        edos = []
         for carro in self.carros:
             carro.preguntaSemaforo(self.agentesSemaforos)
             xy = carro.pos
             p = [xy[0], xy[1], 0]  #XZY
             ps.append(p)
             print(carro.pos)
+        
 
+        for semaforo in self.agentesSemaforos:
+            edos.append(str(semaforo.getEstado()))
+        print("------------Estados semáforos-------------------\n",edos)
+
+        salida=ps,edos
+        print("Salida:-----------------",salida)
+        print(salida[0],"Salidaaaa 1")
         end = timer()
         elapsed = (int)(end - self.start)
         print("Elapsed: ", elapsed)
@@ -417,4 +426,5 @@ class TraficModel(Model):
                 elif(str(elapsed)[-1] == "7"):
                     self.agentesSemaforos[2].cambioAmarillo() 
                     self.agentesSemaforos[1].cambioAmarillo()
-        return ps
+        
+        return salida
