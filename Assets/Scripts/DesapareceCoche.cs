@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class DesapareceCoche : MonoBehaviour
 {
+    private int colision = 2;
     // Start is called before the first frame update
     void Start()
     {
