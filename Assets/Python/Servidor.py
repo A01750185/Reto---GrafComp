@@ -36,5 +36,16 @@ def multiagentes():
     respuesta = "{\"data\":" + positionsToJSON(positions) + "}"
     return respuesta
 
+@app.route('/resetModel')
+def resetModel():
+    print("Entro a reset------------------------")
+    model.schedule.steps = 0
+    model.__init__(N, ancho, alto)
+    '''positions = model.step()
+    print(model.schedule.steps)
+    respuesta = "{\"data\":" + positionsToJSON(positions) + "}"
+    return respuesta '''
+    return jsonify([{"message":"Modelo Reiniciado"}])
+
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=port, debug=True)
+    app.run(host='0.0.0.0', port=port, debug=True)  

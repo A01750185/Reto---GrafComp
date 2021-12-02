@@ -80,6 +80,29 @@ public class WebClient : MonoBehaviour
 
     }
 
+    void ResetModel(string data)
+    {
+        Debug.Log("Entró a resetModel"); 
+        WWWForm form = new WWWForm();
+        form.AddField("bundle", "the data");
+        string url = "http://localhost:8585/resetModel";
+        //using (UnityWebRequest www = UnityWebRequest.Post(url, form))
+        using (UnityWebRequest www = UnityWebRequest.Get(url))
+        {
+            byte[] bodyRaw = System.Text.Encoding.UTF8.GetBytes(data);
+            www.uploadHandler = (UploadHandler)new UploadHandlerRaw(bodyRaw);
+            www.downloadHandler = (DownloadHandler)new DownloadHandlerBuffer();
+            //www.SetRequestHeader("Content-Type", "text/html");
+            www.SetRequestHeader("Content-Type", "application/json");
+
+            //yield return www.SendWebRequest();          // Talk to Python
+            if (www.isNetworkError || www.isHttpError){
+                Debug.Log(www.error);
+            } 
+        }
+        //StopCoroutine("ResetModel"); 
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -137,6 +160,28 @@ public class WebClient : MonoBehaviour
 
                 spheres[s].transform.rotation = Quaternion.LookRotation(dir);
             }
+        }
+        //bool state = false; 
+        int desactivados = 0; 
+        for(int s = 0; s < spheres.Length; s++){
+            if(spheres[s].active == false){
+                //state = true; 
+                desactivados++; 
+                Debug.Log("Objeto desactivado"); 
+            }
+        }
+        Debug.Log("Número de objetos: ");
+        Debug.Log(spheres.Length); 
+        Debug.Log("Desactivados: ");
+        Debug.Log(desactivados);
+
+        if(spheres.Length == desactivados){
+            desactivados = 0; 
+            Debug.Log("Todos los objetos están desactivados"); 
+            Vector3 fakePos = new Vector3(3.44f, 0, -15.707f);
+            string json = EditorJsonUtility.ToJson(fakePos);
+            //StartCoroutine(ResetModel(json));
+            ResetModel(json); 
         }
     }
 }

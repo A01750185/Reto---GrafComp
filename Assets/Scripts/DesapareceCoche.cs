@@ -17,7 +17,8 @@ public class DesapareceCoche : MonoBehaviour
     private void OnTriggerEnter(Collider collision)
     {
         if(collision.gameObject.CompareTag("Barrera")){
-            gameObject.SetActive(false);
+            //gameObject.SetActive(false);
+            gameObject.transform.parent.gameObject.SetActive(false); 
         }
     }
     
