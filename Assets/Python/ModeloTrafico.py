@@ -88,13 +88,15 @@ class CarAgent(Agent):
         Semáforo 4          3                           (6, 6)                   
         '''
         # Horizontal 
-        opcion=random.randint(0,1)
-        print("--------------",opcion,"--------------------")
+        
+        #print("--------------",opcion,"--------------------")
         # Semaforo 1
         if((self.pos[0] >= 1 and self.pos[0] < (self.ancho//2+1)) and self.pos[1] == (self.ancho//2-1)):
                 if(semaforos[1].estado == "g" or semaforos[1].estado == "y"):
                     if(self.pos[0] == (self.ancho//2-1) and self.pos[1] == (self.ancho//2-1)):
+                        opcion= 0 #random.randint(0,1)
                         if(opcion==0):
+                            print("vuelta")
                             self.vuelta()
                         else:
                             self.adelante()
@@ -104,8 +106,10 @@ class CarAgent(Agent):
         if((self.pos[0] <= (self.ancho - 2) and self.pos[0] >= (self.ancho//2 - 1)) and self.pos[1] == (self.ancho//2)):
                 if(semaforos[2].estado == "g" or semaforos[2].estado == "y"):
                     if(self.pos[0] == (self.ancho//2) and self.pos[1] == (self.ancho//2)):
+                        opcion= 0 #random.randint(0,1)
                         if(opcion==0):
                             self.vuelta()
+                            print("vuelta")
                         else:
                             self.adelante()
                     self.move()
@@ -115,6 +119,7 @@ class CarAgent(Agent):
         if(self.pos[0] == self.ancho//2 and (self.pos[1] >= 1 and self.pos[1] <= self.ancho//2)):
                 if(semaforos[3].estado == "g" or semaforos[3].estado == "y"):
                     if(self.pos[0] == (self.ancho//2) and self.pos[1] == (self.ancho//2-1)):
+                        opcion= 0 #random.randint(0,1)
                         if(opcion==0):
                             self.vuelta()
                         else:
@@ -125,6 +130,7 @@ class CarAgent(Agent):
         if(self.pos[0] == self.ancho//2 - 1 and (self.pos[1] >= self.ancho//2 - 1 and self.pos[1] <= self.ancho - 2)):
                 if(semaforos[0].estado == "g" or semaforos[0].estado == "y"):
                     if(self.pos[0] == (self.ancho//2-1) and self.pos[1] == (self.ancho//2)):
+                        opcion= 0 #random.randint(0,1)
                         if(opcion==0):
                             self.vuelta()
                         else:
@@ -134,17 +140,16 @@ class CarAgent(Agent):
     def revisaUbicacion(self, x, y, ancho):
         self.posicionInicial = (x, y)
         # Calle Horizontal de ida desde cuadrante inferior izquierdo, Fijo el eje y
-        if((self.posicionInicial[0] <= (ancho - 2)) and (self.posicionInicial[1] == ancho//2 - 1)):
+        if((self.posicionInicial[0] <= (ancho//2-2) or (self.posicionInicial[0]>=ancho//2)) and (self.posicionInicial[1] == ancho//2 - 1)):
             return (0, 0)
         # Calle Horizontal de vuelta desde cuadrante superior derecho, Fijo el eje y
-        if((self.posicionInicial[0] <= (ancho - 2)) and (self.posicionInicial[1] == ancho//2)): 
+        if((self.posicionInicial[0] <= (ancho - 2) and self.posicionInicial[0] >= ancho//2+1 ) or (self.posicionInicial[0] <= ancho//2-1) and (self.posicionInicial[1] == ancho//2)): 
             return (0, 1)
         # Calle Vertical de ida desde cuadrante inferior derecho, Fijo el eje x
-        if((self.posicionInicial[0] == ancho//2) and (self.posicionInicial[1] <= ancho -2)): 
-            return (0, 2)
-    
+        if((self.posicionInicial[0] == ancho//2) and ((self.posicionInicial[1] <= ancho -2 and self.posicionInicial[1] >= ancho//2) or self.posicionInicial[1] <= ancho//2-2)): 
+            return (0, 2) 
         # Calle Vertical de vuelta desde cuadrante superior izquierdo, Fijo el eje x
-        if((self.posicionInicial[0] == ancho//2 - 1) and (self.posicionInicial[1] <= ancho -2)): 
+        if((self.posicionInicial[0] == ancho//2 - 1) and ((self.posicionInicial[1] <= ancho -2 and self.posicionInicial[1] >= ancho//2+1) or self.posicionInicial[1] <= ancho//2 -1 )): 
             return (0, 3)
         else:
             return (-100, -100)
@@ -413,22 +418,3 @@ class TraficModel(Model):
                     self.agentesSemaforos[2].cambioAmarillo() 
                     self.agentesSemaforos[1].cambioAmarillo()
         return ps
-        '''if(elapsed%10 == 0): 
-            self.agentesSemaforos[0].cambioVerde() 
-            self.agentesSemaforos[3].cambioVerde()
-
-            self.agentesSemaforos[2].cambioRojo()
-            self.agentesSemaforos[1].cambioRojo()'''
-        
-        '''if(str(elapsed)[-1] == "3" and self.agentesSemaforos[0].getEstado() == "g" and self.agentesSemaforos[3].getEstado() == "g"):
-            print("Cambio a Amarillo")
-            self.agentesSemaforos[0].cambioAmarillo() 
-            self.agentesSemaforos[3].cambioAmarillo()
-        if(str(elapsed)[-1] == "5" and self.agentesSemaforos[0].getEstado() == "y" and self.agentesSemaforos[3].getEstado() == "y"):
-            print("Cambio a Rojo")
-            self.agentesSemaforos[0].cambioRojo() 
-            self.agentesSemaforos[3].cambioRojo()
-        if(str(elapsed)[-1] == "9" and self.agentesSemaforos[0].getEstado() == "r" and self.agentesSemaforos[3].getEstado() == "r"):
-            print("Cambio a Verde")
-            self.agentesSemaforos[0].cambioVerde() 
-            self.agentesSemaforos[3].cambioVerde()'''
