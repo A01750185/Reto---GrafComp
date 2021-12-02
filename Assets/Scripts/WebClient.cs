@@ -10,10 +10,15 @@ using UnityEngine;
 using UnityEngine.Networking;
 
 public class WebClient : MonoBehaviour
-{
+{   
+    //Semaforos
+    List<String> semaforos = new List<string>();
+
+    private string[] strs;
     List<List<Vector3>> positions;
 
     public GameObject[] spheres;
+    public GameObject semaforo1, semaforo2, semaforo3, semaforo4;
     public float timeToUpdate = 5.0f;
     private float timer;
     public float dt;
@@ -21,13 +26,6 @@ public class WebClient : MonoBehaviour
     private bool paso = false;
 
     // IEnumerator - yield return
-
-    bool ActivateObjects(GameObject[] spheres){
-         for(int s = 0; s < spheres.Length; s++){
-             spheres[s].SetActive(true);
-         }
-         return true;
-    }
     IEnumerator SendData(string data)
     {
         WWWForm form = new WWWForm();
@@ -82,14 +80,220 @@ public class WebClient : MonoBehaviour
                 {
                     //spheres[s].transform.localPosition = newPositions[s];
                     poss.Add(newPositions[s]);
+                    //paso = false;
                 }
                 positions.Add(poss);
                 paso = false;
             }
         }
-        //paso = false;
+        paso = false;
 
     }
+
+     //Recibir datos de semaforos
+    IEnumerator SendDataSemaforo(string data)
+    {
+        WWWForm form = new WWWForm();
+        form.AddField("bundle", "the data");
+        string url = "http://localhost:8585/semaforos";
+        //using (UnityWebRequest www = UnityWebRequest.Post(url, form))
+        using (UnityWebRequest www = UnityWebRequest.Get(url))
+        {
+            byte[] bodyRaw = System.Text.Encoding.UTF8.GetBytes(data);
+            www.uploadHandler = (UploadHandler) new UploadHandlerRaw(bodyRaw);
+            www.downloadHandler = (DownloadHandler) new DownloadHandlerBuffer();
+            //www.SetRequestHeader("Content-Type", "text/html");
+            www.SetRequestHeader("Content-Type", "application/json");
+
+            yield return www.SendWebRequest(); // Talk to Python
+            if (www.isNetworkError || www.isHttpError)
+            {
+                Debug.Log(www.error);
+            }
+            else
+            {
+                //Debug.Log(www.downloadHandler.text);    // Answer from Python
+                //Debug.Log("Form upload complete!");
+                //Data tPos = JsonUtility.FromJson<Data>(www.downloadHandler.text.Replace('\'', '\"'));
+                //Debug.Log(tPos);
+                String estados;
+                string txt = www.downloadHandler.text.Replace('\'', '\"');
+                txt = txt.TrimStart('"', '{', 'd', 'a', 't', 'a', 'S', 'e', 'm', ':', '[');
+                txt = "\"" + txt;
+                txt = txt.TrimEnd(']', '}');
+
+                strs = txt.Split(new string[] {"[, ]"}, StringSplitOptions.None);
+                
+
+            }
+
+        }
+    }
+
+
+    void EnciendeSemaforo(List<String> semaforos)
+            {
+                if (semaforos.Count > 1)
+                {
+                    string sem1 = semaforos[0];
+                    string sem2 = semaforos[1];
+                    string sem3 = semaforos[2];
+                    string sem4 = semaforos[3];
+                    Debug.Log(sem2);
+
+                    //Semaforo 1
+                    if (sem1 == "g")
+                    {
+                        //semaforo1.transform.GetChild(0).GetComponent<Material>().color = Color.green;
+                        semaforo1.transform.GetChild(0).gameObject.GetComponent<Renderer>().material.color =
+                            new Color(49/255f, 127/255f, 67/255f);
+                        
+                        semaforo1.transform.GetChild(1).gameObject.GetComponent<Renderer>().material.color =
+                            Color.black;
+                        
+                        semaforo1.transform.GetChild(2).gameObject.GetComponent<Renderer>().material.color =
+                            Color.black;
+
+                    }
+                    else if (sem1 == "y")
+
+                    {
+                        semaforo1.transform.GetChild(0).gameObject.GetComponent<Renderer>().material.color =
+                            Color.black;
+                        
+                        semaforo1.transform.GetChild(1).gameObject.GetComponent<Renderer>().material.color =
+                            new Color(1f, 1f, 0/255f);
+                        
+                        semaforo1.transform.GetChild(2).gameObject.GetComponent<Renderer>().material.color =
+                            Color.black;
+                    }
+                    else
+                    {
+                        semaforo1.transform.GetChild(0).gameObject.GetComponent<Renderer>().material.color =
+                            Color.black;
+                        
+                        semaforo1.transform.GetChild(1).gameObject.GetComponent<Renderer>().material.color =
+                            Color.black;
+
+                        semaforo1.transform.GetChild(2).gameObject.GetComponent<Renderer>().material.color =
+                            new Color(1f, 0/255f, 0/255f);
+
+                    }
+
+                    // Semaforo 2
+                    if (sem2 == "g")
+                    {
+                        semaforo2.transform.GetChild(0).gameObject.GetComponent<Renderer>().material.color =
+                            new Color(49/255f, 127/255f, 67/255f);
+                        
+                        semaforo2.transform.GetChild(1).gameObject.GetComponent<Renderer>().material.color =
+                            Color.black;
+                        
+                        semaforo2.transform.GetChild(2).gameObject.GetComponent<Renderer>().material.color =
+                            Color.black;
+                    }
+                    else if (sem2 == "y")
+
+                    {
+                        semaforo2.transform.GetChild(0).gameObject.GetComponent<Renderer>().material.color =
+                            Color.black;
+                        
+                        semaforo2.transform.GetChild(1).gameObject.GetComponent<Renderer>().material.color =
+                            new Color(1f, 1f, 0/255f);
+                        
+                        semaforo2.transform.GetChild(2).gameObject.GetComponent<Renderer>().material.color =
+                            Color.black;
+
+                    }
+                    else
+                    {
+                        semaforo2.transform.GetChild(0).gameObject.GetComponent<Renderer>().material.color =
+                            Color.black;
+                        
+                        semaforo2.transform.GetChild(1).gameObject.GetComponent<Renderer>().material.color =
+                            Color.black;
+
+                        semaforo2.transform.GetChild(2).gameObject.GetComponent<Renderer>().material.color =
+                            new Color(1f, 0/255f, 0/255f);
+
+                    }
+
+                    //Semaforo 3
+                    if (sem3 == "g")
+                    {
+                        semaforo3.transform.GetChild(0).gameObject.GetComponent<Renderer>().material.color =
+                            new Color(49/255f, 127/255f, 67/255f);
+                        
+                        semaforo3.transform.GetChild(1).gameObject.GetComponent<Renderer>().material.color =
+                            Color.black;
+                        
+                        semaforo3.transform.GetChild(2).gameObject.GetComponent<Renderer>().material.color =
+                            Color.black;
+                    }
+                    else if (sem3 == "y")
+
+                    {
+                        semaforo3.transform.GetChild(0).gameObject.GetComponent<Renderer>().material.color =
+                            Color.black;
+                        
+                        semaforo3.transform.GetChild(1).gameObject.GetComponent<Renderer>().material.color =
+                            new Color(1f, 1f, 0/255f);
+                        
+                        semaforo3.transform.GetChild(2).gameObject.GetComponent<Renderer>().material.color =
+                            Color.black;
+                    }
+                    else
+                    {
+                        semaforo3.transform.GetChild(0).gameObject.GetComponent<Renderer>().material.color =
+                            Color.black;
+                        
+                        semaforo3.transform.GetChild(1).gameObject.GetComponent<Renderer>().material.color =
+                            Color.black;
+
+                        semaforo3.transform.GetChild(2).gameObject.GetComponent<Renderer>().material.color =
+                            new Color(1f, 0/255f, 0/255f);
+
+                    }
+
+                    //Semaforo 4
+                    if (sem4 == "g")
+                    {
+                        semaforo4.transform.GetChild(0).gameObject.GetComponent<Renderer>().material.color =
+                            new Color(49/255f, 127/255f, 67/255f);
+                        
+                        semaforo4.transform.GetChild(1).gameObject.GetComponent<Renderer>().material.color =
+                            Color.black;
+                        
+                        semaforo4.transform.GetChild(2).gameObject.GetComponent<Renderer>().material.color =
+                            Color.black;
+                    }
+                    else if (sem4 == "y")
+
+                    {
+                        semaforo4.transform.GetChild(0).gameObject.GetComponent<Renderer>().material.color =
+                            Color.black;
+                        
+                        semaforo4.transform.GetChild(1).gameObject.GetComponent<Renderer>().material.color =
+                            new Color(1f, 1f, 0/255f);
+                        
+                        semaforo4.transform.GetChild(2).gameObject.GetComponent<Renderer>().material.color =
+                            Color.black;
+
+                    }
+                    else
+                    {
+                        semaforo4.transform.GetChild(0).gameObject.GetComponent<Renderer>().material.color =
+                            Color.black;
+                        
+                        semaforo4.transform.GetChild(1).gameObject.GetComponent<Renderer>().material.color =
+                            Color.black;
+
+                        semaforo4.transform.GetChild(2).gameObject.GetComponent<Renderer>().material.color =
+                            new Color(1f, 0/255f, 0/255f);
+                    }
+                }
+            }
+
 
     IEnumerator ResetModel(string data, GameObject[] spheres)
     {
@@ -123,7 +327,10 @@ public class WebClient : MonoBehaviour
         Vector3 fakePos = new Vector3(3.44f, 0, -15.707f);
         string json = EditorJsonUtility.ToJson(fakePos);
         //StartCoroutine(SendData(call));
+        List<String> fakeEdo = new List<String> {"g", "r", "g", "r"};
+        string jsonSem = EditorJsonUtility.ToJson(fakeEdo);
         StartCoroutine(SendData(json));
+        StartCoroutine(SendDataSemaforo(jsonSem));
         timer = timeToUpdate;
 #endif
     }
@@ -147,13 +354,17 @@ public class WebClient : MonoBehaviour
             timer = timeToUpdate; // reset the timer
             Vector3 fakePos = new Vector3(3.44f, 0, -15.707f);
             string json = EditorJsonUtility.ToJson(fakePos);
+            List<String> fakeEdo = new List<String> {"g", "r", "g", "r"};
+            string jsonSem = EditorJsonUtility.ToJson(fakeEdo);
             StartCoroutine(SendData(json));
+            StartCoroutine(SendDataSemaforo(jsonSem));
 #endif
         }
 
 
         if (positions.Count > 1)
         {
+            semaforos = new List<string>();
             for (int s = 0; s < spheres.Length; s++)
             {
                 // Get the last position for s
@@ -173,6 +384,18 @@ public class WebClient : MonoBehaviour
 
                 spheres[s].transform.rotation = Quaternion.LookRotation(dir);
             }
+            for (int i = 0; i < strs[0].Length; i++)
+            {
+                //Debug.Log(strs[0][i]);
+                if (strs[0][i].ToString() == "g" || strs[0][i].ToString() == "r" || strs[0][i].ToString() == "y")
+                {
+                    semaforos.Add(strs[0][i].ToString());
+                }
+            
+            }
+                //string hola = semaforos[0];
+                //Debug.Log("Strings " + hola);
+                EnciendeSemaforo(semaforos);
         }
         //bool state = false; 
         int desactivados = 0; 

@@ -94,7 +94,7 @@ class CarAgent(Agent):
         if((self.pos[0] >= 1 and self.pos[0] < (self.ancho//2+1)) and self.pos[1] == (self.ancho//2-1)):
                 if(semaforos[1].estado == "g" or semaforos[1].estado == "y"):
                     if(self.pos[0] == (self.ancho//2-1) and self.pos[1] == (self.ancho//2-1)):
-                        opcion= 0 #random.randint(0,1)
+                        opcion= random.randint(0,1)
                         if(opcion==0):
                             print("vuelta")
                             self.vuelta()
@@ -106,7 +106,7 @@ class CarAgent(Agent):
         if((self.pos[0] <= (self.ancho - 2) and self.pos[0] >= (self.ancho//2 - 1)) and self.pos[1] == (self.ancho//2)):
                 if(semaforos[2].estado == "g" or semaforos[2].estado == "y"):
                     if(self.pos[0] == (self.ancho//2) and self.pos[1] == (self.ancho//2)):
-                        opcion= 0 #random.randint(0,1)
+                        opcion= random.randint(0,1)
                         if(opcion==0):
                             self.vuelta()
                             print("vuelta")
@@ -119,7 +119,7 @@ class CarAgent(Agent):
         if(self.pos[0] == self.ancho//2 and (self.pos[1] >= 1 and self.pos[1] <= self.ancho//2)):
                 if(semaforos[3].estado == "g" or semaforos[3].estado == "y"):
                     if(self.pos[0] == (self.ancho//2) and self.pos[1] == (self.ancho//2-1)):
-                        opcion= 0 #random.randint(0,1)
+                        opcion= random.randint(0,1)
                         if(opcion==0):
                             self.vuelta()
                         else:
@@ -130,7 +130,7 @@ class CarAgent(Agent):
         if(self.pos[0] == self.ancho//2 - 1 and (self.pos[1] >= self.ancho//2 - 1 and self.pos[1] <= self.ancho - 2)):
                 if(semaforos[0].estado == "g" or semaforos[0].estado == "y"):
                     if(self.pos[0] == (self.ancho//2-1) and self.pos[1] == (self.ancho//2)):
-                        opcion= 0 #random.randint(0,1)
+                        opcion= random.randint(0,1)
                         if(opcion==0):
                             self.vuelta()
                         else:

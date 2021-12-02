@@ -24,13 +24,12 @@ def positionsToJSON(ps):
 def estadoToJSON(edos):
     edoDICT = []
     print("--------------------Estadossssss\n",edos)
-   
-    est = {
-            "semaforo 1" : edos[0],
-            "semaforo 2" : edos[1],
-            "semaforo 3" : edos[2],
-            "semaforo 4" : edos[3]
-        }
+    est = [
+            edos[0],
+            edos[1],
+            edos[2],
+            edos[3]
+    ]
     edoDICT.append(est)
     return json.dumps(edoDICT)
 # On IBM Cloud Cloud Foundry, get the port number from the environment variable PORT
