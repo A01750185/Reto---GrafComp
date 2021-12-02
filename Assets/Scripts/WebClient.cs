@@ -18,14 +18,15 @@ public class WebClient : MonoBehaviour
     private float timer;
     public float dt;
     private int estadoRepeticion = 0; 
+    private bool paso = false;
 
     // IEnumerator - yield return
 
-    void ActivateObjects(GameObject[] spheres){
+    bool ActivateObjects(GameObject[] spheres){
          for(int s = 0; s < spheres.Length; s++){
-             spheres[s].transform.parent.gameObject.SetActive(true);
              spheres[s].SetActive(true);
          }
+         return true;
     }
     IEnumerator SendData(string data)
     {
@@ -83,12 +84,14 @@ public class WebClient : MonoBehaviour
                     poss.Add(newPositions[s]);
                 }
                 positions.Add(poss);
+                paso = false;
             }
         }
+        //paso = false;
 
     }
 
-    IEnumerator ResetModel(string data)
+    IEnumerator ResetModel(string data, GameObject[] spheres)
     {
         Debug.Log("Entró a resetModel"); 
         WWWForm form = new WWWForm();
@@ -172,7 +175,7 @@ public class WebClient : MonoBehaviour
             }
         }
         //bool state = false; 
-        /*int desactivados = 0; 
+        int desactivados = 0; 
         for(int s = 0; s < spheres.Length; s++){
             if(spheres[s].active == false){
                 //state = true; 
@@ -184,19 +187,24 @@ public class WebClient : MonoBehaviour
         Debug.Log(spheres.Length); 
         Debug.Log("Desactivados: ");
         Debug.Log(desactivados);
+        if(paso){
+            for(int s = 0; s < spheres.Length; s++){
+             spheres[s].SetActive(true);
+            }
+            paso = true;
+        }
 
         if(spheres.Length == desactivados){
-            desactivados = 0; 
-            estadoRepeticion = 1; 
+            desactivados = 0;
+            StopCoroutine("SendData");
             Debug.Log("Todos los objetos están desactivados"); 
             Vector3 fakePos = new Vector3(3.44f, 0, -15.707f);
             string json = EditorJsonUtility.ToJson(fakePos);
-            StartCoroutine(ResetModel(json));
-            StopCoroutine("ResetModel"); 
+            StartCoroutine(ResetModel(json, spheres));
+            StopCoroutine("ResetModel");
+            StartCoroutine(SendData(json));
+            paso = true;
             //ResetModel(json);
         }
-        else{
-            estadoRepeticion = 0; 
-        }*/
     }
 }
